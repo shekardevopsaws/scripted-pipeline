@@ -19,5 +19,11 @@ sh "${mavenHome}/bin/mvn clean package"
 
 }
 
+// scan the source code using sonarqube
+
+stage('scan sourcecode')
+{
+    sh "${mavenHome}/bin/mvn clean package sonar:sonar"
+}
 
 }
