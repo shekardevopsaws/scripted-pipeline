@@ -15,7 +15,7 @@ stage('git checkout')
 
 stage('Build')
 {
-sh "${mavenHome}/bin/mvn clean package"
+ sh "${mavenHome}/bin/mvn clean package"
 
 }
 
@@ -25,5 +25,36 @@ stage('scan sourcecode')
 {
     sh "${mavenHome}/bin/mvn clean package sonar:sonar"
 }
+
+
+
+//push the artifacts to nexus 
+
+stage('upload artifact into nexus')
+{
+    sh "${mavenHome}/bin/mvn clean package sonar:sonar deploy"
+}
+
+
+// Deploy to tomcat
+// stage('Deploy WAR via SCP') {
+//     sshagent(['tomcat-ssh']) {
+//         sh """
+//             scp /var/lib/jenkins/workspace/kk-funda-war-project/target/maven-web-application.war \
+//             ec2-user@54.227.148.11:/opt/tomcat/webapps/
+//         """
+//     }
+// }
+
+stage('Deploy to Tomcat') {
+        echo "Deploying WAR file using curl..."
+
+        sh """
+            curl -u mamatha:mamatha123 \
+            --upload-file //var/lib/jenkins/workspace/kk-funda-war-project/target/maven-web-application.war\
+            "http://54.227.148.11:8080/manager/text/deploy?path=/maven-web-application&update=true"
+        """
+    }
+
 
 }
