@@ -1,5 +1,5 @@
 node {
-def mavenHome = tool name: "maven 3.9.8"
+def mavenHome = tool "maven 3.9.8"
 // Git checkout
 
 stage('git checkout')
@@ -18,9 +18,6 @@ stage('Build')
 sh "${mavenHome}/bin/mvn clean package"
 
 }
-
-
-
 
 
 }
